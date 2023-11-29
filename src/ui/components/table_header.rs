@@ -30,7 +30,10 @@ impl<'a> TableHeader<'a> {
             if ui.is_rect_visible(response.rect) {
                 let stroke = ui.visuals().widgets.noninteractive.bg_stroke;
                 let painter = ui.painter();
-                painter.vline(rect.left(), rect.top()..=rect.bottom(), stroke);
+                painter.line_segment(
+                    [rect.left_top(), rect.left_bottom()],
+                    (stroke.width, stroke.color),
+                );
             }
 
             (self.children.unwrap().as_mut())(ui)

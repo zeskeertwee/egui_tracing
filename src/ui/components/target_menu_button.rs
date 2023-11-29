@@ -15,7 +15,7 @@ impl<'a> TargetMenuButton<'a> {
         self
     }
 
-    pub fn show(mut self, ui: &mut Ui) {
+    pub fn show(self, ui: &mut Ui) {
         let state = self.state.unwrap();
         ui.menu_button("Target", |ui| {
             ui.label("Target Filter");
@@ -31,7 +31,7 @@ impl<'a> TargetMenuButton<'a> {
                 .inner;
 
             if add_button.clicked()
-                || (input.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)))
+                || (input.lost_focus() && ui.input().key_pressed(egui::Key::Enter))
             {
                 state.targets.push(Glob::new(&state.input).unwrap());
                 state.input = "".to_owned();

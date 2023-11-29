@@ -4,7 +4,7 @@ mod state;
 
 use std::sync::{Arc, Mutex};
 
-use egui::{Color32, Label, Response, TextStyle, Widget};
+use egui::{Color32, Label, Response, Widget};
 use globset::GlobSetBuilder;
 
 use self::color::ToColor32;
@@ -34,14 +34,15 @@ impl Logs {
 
 impl Widget for Logs {
     fn ui(self, ui: &mut egui::Ui) -> Response {
-        let state = ui.memory_mut(|mem| {
-            let state_mem_id = ui.id();
-            mem.data
-                .get_temp_mut_or_insert_with(state_mem_id, || {
-                    Arc::new(Mutex::new(LogsState::default()))
-                })
-                .clone()
-        });
+        let mut memory = ui.memory();
+        let state_mem_id = ui.id();
+        let state = memory.data
+            .get_temp_mut_or_insert_with(state_mem_id, || {
+                Arc::new(Mutex::new(LogsState::default()))
+            })
+            .clone();
+        drop(memory);
+
         let mut state = state.lock().unwrap();
 
         // TODO: cache the globset
@@ -60,7 +61,7 @@ impl Widget for Logs {
             .collect::<Vec<_>>();
 
         let row_height = constants::SEPARATOR_SPACING
-            + ui.style().text_styles.get(&TextStyle::Small).unwrap().size;
+            + ui.style().spacing.item_spacing.y;
 
         Table::default()
             .on_clear(|| {

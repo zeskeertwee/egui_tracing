@@ -59,16 +59,17 @@ impl<'a, T> Table<'a, T> {
                     .on_hover_text("Scroll to Bottom")
                     .clicked()
                 {
-                    ui.scroll_to_rect(
-                        egui::Rect {
-                            min: egui::Pos2 { x: 0.0, y: 0.0 },
-                            max: egui::Pos2 {
-                                x: f32::MAX,
-                                y: f32::MAX,
-                            },
-                        },
-                        Some(egui::Align::Max),
-                    );
+                    ui.scroll_to_cursor(egui::Align::BOTTOM);
+                    //ui.scroll_to_rect(
+                    //    egui::Rect {
+                    //        min: egui::Pos2 { x: 0.0, y: 0.0 },
+                    //        max: egui::Pos2 {
+                    //            x: f32::MAX,
+                    //            y: f32::MAX,
+                    //        },
+                    //    },
+                    //    Some(egui::Align::Max),
+                    //);
                 }
 
                 ui.separator();
@@ -83,7 +84,7 @@ impl<'a, T> Table<'a, T> {
             let mut row = self.row.unwrap();
             egui::ScrollArea::vertical()
                 .auto_shrink([false, false])
-                .stick_to_bottom(true)
+                .stick_to_bottom()
                 .show_rows(
                     ui,
                     self.row_height.unwrap() + SEPARATOR_SPACING,
